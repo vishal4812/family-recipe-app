@@ -6,7 +6,6 @@ import '../../../../core/theme/app_dimensions.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../shared/widgets/buttons/app_secondary_button.dart';
 import '../widgets/profile_summary_card.dart';
-import '../widgets/settings_placeholder_card.dart';
 import '../widgets/stat_tile.dart';
 
 class ProfilePlaceholderScreen extends StatefulWidget {
@@ -36,6 +35,10 @@ class _ProfilePlaceholderScreenState extends State<ProfilePlaceholderScreen> {
     navigator.pushNamedAndRemoveUntil(RouteNames.auth, (_) => false);
   }
 
+  Future<void> _openSettings() async {
+    await Navigator.of(context).pushNamed(RouteNames.settings);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appState = AppStateScope.watch(context);
@@ -61,12 +64,7 @@ class _ProfilePlaceholderScreenState extends State<ProfilePlaceholderScreen> {
                   value: '${appState.recipes.length}',
                 ),
                 const SizedBox(height: AppSpacing.md),
-                const SettingsPlaceholderCard(
-                  items: <String>[
-                    'Account settings',
-                    'More family features coming soon',
-                  ],
-                ),
+                _ProfileActionCard(onTap: _openSettings),
                 const SizedBox(height: AppSpacing.xl),
                 AppSecondaryButton(
                   label: _isLoggingOut ? 'Logging Out...' : 'Log Out',
@@ -75,6 +73,42 @@ class _ProfilePlaceholderScreenState extends State<ProfilePlaceholderScreen> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileActionCard extends StatelessWidget {
+  const _ProfileActionCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: const Padding(
+          padding: EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.settings_outlined),
+              SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Settings'),
+                    SizedBox(height: AppSpacing.xxs),
+                    Text('Account, privacy, and app information'),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right_rounded),
+            ],
           ),
         ),
       ),

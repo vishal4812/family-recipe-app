@@ -92,6 +92,12 @@ export class CreateRecipeDto {
   @Transform(({ value }) => normalizeOptionalString(value))
   @IsOptional()
   @IsString()
+  @MaxLength(80)
+  collection?: string;
+
+  @Transform(({ value }) => normalizeOptionalString(value))
+  @IsOptional()
+  @IsString()
   @MaxLength(500)
   imageUrl?: string;
 }

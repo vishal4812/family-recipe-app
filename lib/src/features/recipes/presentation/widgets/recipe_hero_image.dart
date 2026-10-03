@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
+import '../../../../core/theme/app_radii.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/media/app_image.dart';
@@ -14,17 +15,20 @@ class RecipeHeroImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: AppDimensions.heroAspectRatio,
-      child:
-          (imageUrl ?? '').trim().isNotEmpty ||
-              (imagePath ?? '').trim().isNotEmpty
-          ? AppImage(
-              imageUrl: imageUrl,
-              imagePath: imagePath,
-              errorBuilder: (_) => const _HeroFallback(),
-            )
-          : const _HeroFallback(),
+    return ClipRRect(
+      borderRadius: AppRadii.radius20,
+      child: AspectRatio(
+        aspectRatio: AppDimensions.heroAspectRatio,
+        child:
+            (imageUrl ?? '').trim().isNotEmpty ||
+                (imagePath ?? '').trim().isNotEmpty
+            ? AppImage(
+                imageUrl: imageUrl,
+                imagePath: imagePath,
+                errorBuilder: (_) => const _HeroFallback(),
+              )
+            : const _HeroFallback(),
+      ),
     );
   }
 }
@@ -41,12 +45,12 @@ class _HeroFallback extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           const Icon(
-            Icons.image_outlined,
+            Icons.photo_album_outlined,
             size: AppDimensions.heroPlaceholderIconSize,
-            color: AppColors.textSecondary,
+            color: AppColors.primaryDark,
           ),
           const SizedBox(height: AppSpacing.xs),
-          Text('No photo yet', style: AppTypography.bodySmall),
+          Text('Add a family photo', style: AppTypography.bodySmall),
         ],
       ),
     );

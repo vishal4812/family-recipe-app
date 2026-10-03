@@ -52,7 +52,13 @@ class ProfileSummaryCard extends StatelessWidget {
               children: <Widget>[
                 Text(name, style: AppTypography.bodyLarge),
                 const SizedBox(height: AppSpacing.xxs),
-                Text(email, style: AppTypography.bodySmall),
+                Text(
+                  email,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  semanticsLabel: email,
+                  style: AppTypography.bodySmall,
+                ),
               ],
             ),
           ),

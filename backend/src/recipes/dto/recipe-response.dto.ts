@@ -13,6 +13,7 @@ export class RecipeResponseDto {
     this.servings = recipe.servings;
     this.difficulty = recipe.difficulty;
     this.cuisine = recipe.cuisine;
+    this.collection = recipe.collection;
     this.imageUrl = recipe.imageUrl;
     this.createdAt = recipe.createdAt;
     this.updatedAt = recipe.updatedAt;
@@ -29,6 +30,7 @@ export class RecipeResponseDto {
   servings: number | null;
   difficulty: string | null;
   cuisine: string | null;
+  collection: string | null;
   imageUrl: string | null;
   createdAt: Date;
   updatedAt: Date;

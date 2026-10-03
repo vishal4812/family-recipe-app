@@ -66,27 +66,32 @@ class _ConfirmActionSheetState extends State<ConfirmActionSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(widget.title, style: AppTypography.titleMedium),
-          const SizedBox(height: AppSpacing.xs),
-          Text(widget.message, style: AppTypography.bodySmall),
-          const SizedBox(height: AppSpacing.xl),
-          AppPrimaryButton(
-            label: widget.confirmLabel,
-            isLoading: _isConfirming,
-            onPressed: _isConfirming ? null : _handleConfirm,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          AppSecondaryButton(
-            label: widget.cancelLabel,
-            onPressed: _isConfirming ? null : () => Navigator.of(context).pop(),
-          ),
-        ],
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(widget.title, style: AppTypography.titleMedium),
+            const SizedBox(height: AppSpacing.xs),
+            Text(widget.message, style: AppTypography.bodySmall),
+            const SizedBox(height: AppSpacing.xl),
+            AppPrimaryButton(
+              label: widget.confirmLabel,
+              isLoading: _isConfirming,
+              onPressed: _isConfirming ? null : _handleConfirm,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            AppSecondaryButton(
+              label: widget.cancelLabel,
+              onPressed: _isConfirming
+                  ? null
+                  : () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
       ),
     );
   }

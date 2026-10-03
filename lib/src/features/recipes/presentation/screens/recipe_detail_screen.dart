@@ -4,7 +4,9 @@ import '../../../../core/navigation/route_names.dart';
 import '../../../../core/network/error_message_resolver.dart';
 import '../../../../core/state/app_state.dart';
 import '../../../../core/state/app_state_scope.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
+import '../../../../core/theme/app_radii.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/buttons/app_icon_button.dart';
@@ -148,51 +150,60 @@ class RecipeDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  RecipeHeroImage(
-                    imageUrl: recipe.imageUrl,
-                    imagePath: recipe.imagePath,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                    child: RecipeHeroImage(
+                      imageUrl: recipe.imageUrl,
+                      imagePath: recipe.imagePath,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(recipe.title, style: AppTypography.titleLarge),
+                        if ((recipe.collection ?? '')
+                            .trim()
+                            .isNotEmpty) ...<Widget>[
+                          _FamilyChapterLabel(label: recipe.collection!.trim()),
+                          const SizedBox(height: AppSpacing.sm),
+                        ],
+                        Text(recipe.title, style: AppTypography.displayLarge),
                         if (recipe.description.trim().isNotEmpty) ...<Widget>[
-                          const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            recipe.description,
-                            style: AppTypography.bodySmall,
-                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          _RecipeNote(message: recipe.description),
                         ],
                         const SizedBox(height: AppSpacing.md),
                         Wrap(
                           spacing: AppSpacing.xs,
                           runSpacing: AppSpacing.xs,
                           children: <Widget>[
-                            if (recipe.prepTimeMinutes != null)
+                            if (recipe.prepTimeMinutes != null ||
+                                recipe.cookTimeMinutes != null)
                               MetadataChip(
                                 icon: Icons.schedule_rounded,
-                                label: '${recipe.prepTimeMinutes} min prep',
-                              ),
-                            if (recipe.cookTimeMinutes != null)
-                              MetadataChip(
-                                icon: Icons.schedule_rounded,
-                                label: '${recipe.cookTimeMinutes} min cook',
+                                label:
+                                    '${(recipe.prepTimeMinutes ?? 0) + (recipe.cookTimeMinutes ?? 0)} min total',
                               ),
                             if (recipe.servings != null)
                               MetadataChip(
                                 icon: Icons.people_alt_outlined,
                                 label: 'Serves ${recipe.servings}',
                               ),
+                            if ((recipe.collection ?? '').trim().isNotEmpty)
+                              MetadataChip(
+                                icon: Icons.collections_bookmark_outlined,
+                                label: recipe.collection!.trim(),
+                                backgroundColor: AppColors.cookbookSage,
+                              ),
                           ],
                         ),
                         const SizedBox(height: AppSpacing.xl),
-                        const SectionHeader(title: 'Ingredients'),
+                        const SectionHeader(title: 'What you\'ll need'),
                         const SizedBox(height: AppSpacing.sm),
                         IngredientsCard(items: recipe.ingredients),
                         const SizedBox(height: AppSpacing.xl),
-                        const SectionHeader(title: 'Instructions'),
+                        const SectionHeader(title: 'Make it step by step'),
                         const SizedBox(height: AppSpacing.sm),
                         InstructionStepList(steps: recipe.instructions),
                       ],
@@ -203,6 +214,71 @@ class RecipeDetailScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _FamilyChapterLabel extends StatelessWidget {
+  const _FamilyChapterLabel({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: AppColors.cookbookSage,
+        borderRadius: AppRadii.radius28,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Icon(
+            Icons.auto_stories_rounded,
+            size: 16,
+            color: AppColors.cookbookSageDark,
+          ),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            label,
+            style: AppTypography.caption.copyWith(
+              color: AppColors.cookbookSageDark,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecipeNote extends StatelessWidget {
+  const _RecipeNote({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceSoft,
+        borderRadius: AppRadii.radius16,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Icon(
+            Icons.favorite_border_rounded,
+            size: 18,
+            color: AppColors.primaryDark,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(child: Text(message, style: AppTypography.bodySmall)),
+        ],
       ),
     );
   }

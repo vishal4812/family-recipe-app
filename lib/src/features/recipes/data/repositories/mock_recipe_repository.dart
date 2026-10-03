@@ -73,6 +73,7 @@ class MockRecipeRepository implements RecipeRepository {
       prepTimeMinutes: draft.prepTimeMinutes,
       cookTimeMinutes: draft.cookTimeMinutes,
       servings: draft.servings,
+      collection: draft.collection,
       createdAt: now.toIso8601String(),
       updatedAt: now.toIso8601String(),
     );
@@ -103,6 +104,7 @@ class MockRecipeRepository implements RecipeRepository {
       prepTimeMinutes: draft.prepTimeMinutes,
       cookTimeMinutes: draft.cookTimeMinutes,
       servings: draft.servings,
+      collection: draft.collection,
       createdAt: existing.createdAt,
       updatedAt: DateTime.now().toIso8601String(),
     );

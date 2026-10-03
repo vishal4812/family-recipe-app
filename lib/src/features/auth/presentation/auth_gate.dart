@@ -36,7 +36,11 @@ class _AuthGateState extends State<AuthGate> {
       }
 
       Navigator.of(context).pushReplacementNamed(
-        appState.isAuthenticated ? RouteNames.home : RouteNames.auth,
+        appState.isAuthenticated
+            ? RouteNames.home
+            : AppDependenciesScope.read(context).showOnboarding
+            ? RouteNames.onboarding
+            : RouteNames.auth,
       );
     });
   }

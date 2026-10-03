@@ -17,6 +17,7 @@ abstract final class MockRecipeSeed {
       prepTimeMinutes: 20,
       cookTimeMinutes: 15,
       servings: 4,
+      collection: 'Weekend favourites',
       ingredients: const <String>[
         '2 cups whole wheat flour',
         '3 boiled potatoes',
@@ -44,6 +45,7 @@ abstract final class MockRecipeSeed {
       prepTimeMinutes: 10,
       cookTimeMinutes: 25,
       servings: 3,
+      collection: 'Everyday meals',
       ingredients: const <String>[
         '1 cup toor dal',
         '1 tomato, chopped',
@@ -71,6 +73,7 @@ abstract final class MockRecipeSeed {
       prepTimeMinutes: 15,
       cookTimeMinutes: 30,
       servings: 5,
+      collection: 'Coastal classics',
       ingredients: const <String>[
         '500 g fish pieces',
         '1 cup coconut milk',

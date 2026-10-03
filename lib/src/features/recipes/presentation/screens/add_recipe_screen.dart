@@ -26,6 +26,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final TextEditingController _prepController = TextEditingController();
   final TextEditingController _cookController = TextEditingController();
   final TextEditingController _servingsController = TextEditingController();
+  final TextEditingController _collectionController = TextEditingController();
 
   bool _isSaving = false;
   RecipeImageSelection? _selectedImage;
@@ -39,6 +40,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     _prepController.dispose();
     _cookController.dispose();
     _servingsController.dispose();
+    _collectionController.dispose();
     super.dispose();
   }
 
@@ -119,6 +121,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         prepTimeMinutes: _parseInt(_prepController.text),
         cookTimeMinutes: _parseInt(_cookController.text),
         servings: _parseInt(_servingsController.text),
+        collection: _collectionController.text.trim(),
       );
       await appState.createRecipe(draft);
 
@@ -175,6 +178,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                         prepController: _prepController,
                         cookController: _cookController,
                         servingsController: _servingsController,
+                        collectionController: _collectionController,
                         titleValidator: _validateTitle,
                         ingredientsValidator: _validateIngredients,
                         instructionsValidator: _validateInstructions,

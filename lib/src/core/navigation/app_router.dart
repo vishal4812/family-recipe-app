@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../features/auth/presentation/auth_gate.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
+import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/profile/presentation/screens/profile_placeholder_screen.dart';
+import '../../features/profile/presentation/screens/settings_screen.dart';
 import '../../features/recipes/presentation/screens/add_recipe_screen.dart';
 import '../../features/recipes/presentation/screens/edit_recipe_screen.dart';
 import '../../features/recipes/presentation/screens/home_recipe_list_screen.dart';
@@ -24,6 +26,11 @@ class AppRouter {
         return _buildRoute(
           settings: settings,
           builder: (_) => const AuthScreen(),
+        );
+      case RouteNames.onboarding:
+        return _buildRoute(
+          settings: settings,
+          builder: (_) => const OnboardingScreen(),
         );
       case RouteNames.home:
         return _buildRoute(
@@ -51,6 +58,11 @@ class AppRouter {
         return _buildRoute(
           settings: settings,
           builder: (_) => const ProfilePlaceholderScreen(),
+        );
+      case RouteNames.settings:
+        return _buildRoute(
+          settings: settings,
+          builder: (_) => const SettingsScreen(),
         );
       default:
         return _buildRoute(

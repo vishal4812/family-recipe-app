@@ -76,7 +76,7 @@ npm run db:seed
 npm run start:dev
 ```
 
-Backend docs: [backend/README.md](/home/addweb/Learning/Pro/family-recipe-app/backend/README.md)
+Backend docs: [backend/README.md](backend/README.md)
 
 ## Run Flutter Against The Backend
 
@@ -263,11 +263,11 @@ Before shipping a public build:
 4. Test image upload and remote image rendering against the deployed backend.
 5. Confirm backend `APP_URL`, storage paths, and CORS settings match the deployed environment.
 6. Run the smoke checklist below on at least one Android device and one iPhone or simulator.
-7. Complete the dedicated release checklist in [docs/release-readiness-checklist.md](/home/addweb/Learning/Pro/family-recipe-app/docs/release-readiness-checklist.md).
+7. Complete the dedicated release checklist in [docs/release-readiness-checklist.md](docs/release-readiness-checklist.md).
 
 ### Android release commands
 
-Create `android/key.properties` from [android/key.properties.example](/home/addweb/Learning/Pro/family-recipe-app/android/key.properties.example) or provide equivalent environment variables:
+Create `android/key.properties` from [android/key.properties.example](android/key.properties.example) or provide equivalent environment variables:
 
 - `ANDROID_KEYSTORE_PATH`
 - `ANDROID_KEYSTORE_PASSWORD`

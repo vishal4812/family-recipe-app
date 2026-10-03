@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import '../auth/auth_token_store.dart';
 import 'api_client.dart';
@@ -74,7 +75,13 @@ class NestApiClient implements ApiClient {
       if (fields != null && fields.isNotEmpty) {
         request.fields.addAll(fields);
       }
-      request.files.add(await http.MultipartFile.fromPath(fileField, filePath));
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          fileField,
+          filePath,
+          contentType: _imageContentTypeForPath(filePath),
+        ),
+      );
 
       final streamedResponse = await _httpClient.send(request);
       return http.Response.fromStream(streamedResponse);
@@ -128,6 +135,26 @@ class NestApiClient implements ApiClient {
     return Uri.parse(
       '$normalizedBase$normalizedPath',
     ).replace(queryParameters: queryParameters);
+  }
+
+  MediaType _imageContentTypeForPath(String filePath) {
+    final normalizedPath = filePath.toLowerCase();
+    if (normalizedPath.endsWith('.png')) {
+      return MediaType('image', 'png');
+    }
+    if (normalizedPath.endsWith('.webp')) {
+      return MediaType('image', 'webp');
+    }
+    if (normalizedPath.endsWith('.gif')) {
+      return MediaType('image', 'gif');
+    }
+    if (normalizedPath.endsWith('.heic')) {
+      return MediaType('image', 'heic');
+    }
+    if (normalizedPath.endsWith('.heif')) {
+      return MediaType('image', 'heif');
+    }
+    return MediaType('image', 'jpeg');
   }
 
   Future<Map<String, String>> _buildHeaders({

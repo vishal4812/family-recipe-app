@@ -28,6 +28,7 @@ class AppDependencies {
     required this.authTokenStore,
     required this.splashDelay,
     required this.showSamplePhotoOptions,
+    this.showOnboarding = false,
     this.apiClient,
   });
 
@@ -39,6 +40,7 @@ class AppDependencies {
   final AuthTokenStore authTokenStore;
   final Duration splashDelay;
   final bool showSamplePhotoOptions;
+  final bool showOnboarding;
   final ApiClient? apiClient;
 
   factory AppDependencies.mock({
@@ -50,6 +52,7 @@ class AppDependencies {
     List<Recipe>? initialRecipes,
     bool simulateInitialRecipeLoadError = false,
     RecipeImagePickerService? recipeImagePickerService,
+    bool showOnboarding = false,
   }) {
     final authTokenStore = MemoryAuthTokenStore();
     final authRepository = MockAuthRepository(
@@ -73,6 +76,7 @@ class AppDependencies {
       authTokenStore: authTokenStore,
       splashDelay: splashDelay,
       showSamplePhotoOptions: true,
+      showOnboarding: showOnboarding,
     );
   }
 
@@ -112,6 +116,7 @@ class AppDependencies {
       authTokenStore: resolvedAuthTokenStore,
       splashDelay: splashDelay,
       showSamplePhotoOptions: AppConfig.enableSamplePhotoOptions,
+      showOnboarding: true,
       apiClient: resolvedApiClient,
     );
   }

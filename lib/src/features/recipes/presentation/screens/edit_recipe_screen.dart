@@ -32,6 +32,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   final TextEditingController _prepController = TextEditingController();
   final TextEditingController _cookController = TextEditingController();
   final TextEditingController _servingsController = TextEditingController();
+  final TextEditingController _collectionController = TextEditingController();
 
   bool _isSaving = false;
   bool _isDeleting = false;
@@ -48,6 +49,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     _prepController.dispose();
     _cookController.dispose();
     _servingsController.dispose();
+    _collectionController.dispose();
     super.dispose();
   }
 
@@ -64,6 +66,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     _prepController.text = recipe.prepTimeMinutes?.toString() ?? '';
     _cookController.text = recipe.cookTimeMinutes?.toString() ?? '';
     _servingsController.text = recipe.servings?.toString() ?? '';
+    _collectionController.text = recipe.collection ?? '';
     _selectedImage = RecipeImageSelection(
       imageUrl: recipe.imageUrl,
       imagePath: recipe.imagePath,
@@ -148,6 +151,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
         prepTimeMinutes: _parseInt(_prepController.text),
         cookTimeMinutes: _parseInt(_cookController.text),
         servings: _parseInt(_servingsController.text),
+        collection: _collectionController.text.trim(),
       );
 
       await appState.updateRecipe(recipeId: existingRecipe.id, draft: draft);
@@ -319,6 +323,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                           prepController: _prepController,
                           cookController: _cookController,
                           servingsController: _servingsController,
+                          collectionController: _collectionController,
                           titleValidator: _validateTitle,
                           ingredientsValidator: _validateIngredients,
                           instructionsValidator: _validateInstructions,

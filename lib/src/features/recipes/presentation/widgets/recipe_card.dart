@@ -20,6 +20,7 @@ class RecipeCard extends StatelessWidget {
     this.prepMinutes,
     this.cookMinutes,
     this.servings,
+    this.collection,
   });
 
   final String title;
@@ -29,6 +30,7 @@ class RecipeCard extends StatelessWidget {
   final int? prepMinutes;
   final int? cookMinutes;
   final int? servings;
+  final String? collection;
   final VoidCallback onTap;
 
   @override
@@ -37,7 +39,7 @@ class RecipeCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: AppRadii.radius16,
+        borderRadius: AppRadii.radius20,
         child: Container(
           constraints: const BoxConstraints(
             minHeight: AppDimensions.recipeCardMinHeight,
@@ -45,7 +47,7 @@ class RecipeCard extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.sm),
           decoration: BoxDecoration(
             color: AppColors.surface,
-            borderRadius: AppRadii.radius16,
+            borderRadius: AppRadii.radius20,
             border: Border.all(color: AppColors.border),
             boxShadow: AppShadows.low,
           ),
@@ -58,6 +60,10 @@ class RecipeCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    if ((collection ?? '').trim().isNotEmpty) ...<Widget>[
+                      _CollectionLabel(label: collection!.trim()),
+                      const SizedBox(height: AppSpacing.xs),
+                    ],
                     Text(
                       title,
                       style: AppTypography.bodyLarge,
@@ -78,15 +84,11 @@ class RecipeCard extends StatelessWidget {
                       spacing: AppSpacing.xs,
                       runSpacing: AppSpacing.xs,
                       children: <Widget>[
-                        if (prepMinutes != null)
+                        if (prepMinutes != null || cookMinutes != null)
                           MetadataChip(
                             icon: Icons.schedule_rounded,
-                            label: '${prepMinutes!} min prep',
-                          ),
-                        if (cookMinutes != null)
-                          MetadataChip(
-                            icon: Icons.schedule_rounded,
-                            label: '${cookMinutes!} min cook',
+                            label:
+                                '${(prepMinutes ?? 0) + (cookMinutes ?? 0)} min',
                           ),
                         if (servings != null)
                           MetadataChip(
@@ -127,10 +129,10 @@ class _RecipeImageThumbnail extends StatelessWidget {
         : const _RecipeImageFallback();
 
     return ClipRRect(
-      borderRadius: AppRadii.radius12,
+      borderRadius: AppRadii.radius16,
       child: SizedBox(
-        width: AppDimensions.recipeCardImageSize,
-        height: AppDimensions.recipeCardImageSize,
+        width: AppDimensions.recipeCardImageSize + 8,
+        height: AppDimensions.recipeCardImageSize + 8,
         child: child,
       ),
     );
@@ -144,7 +146,45 @@ class _RecipeImageFallback extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.surfaceSoft,
-      child: const Icon(Icons.image_outlined, color: AppColors.textSecondary),
+      child: const Icon(Icons.menu_book_outlined, color: AppColors.primaryDark),
+    );
+  }
+}
+
+class _CollectionLabel extends StatelessWidget {
+  const _CollectionLabel({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.cookbookSage,
+        borderRadius: AppRadii.radius28,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Icon(
+            Icons.bookmark_added_outlined,
+            size: 14,
+            color: AppColors.cookbookSageDark,
+          ),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+              style: AppTypography.caption.copyWith(
+                color: AppColors.cookbookSageDark,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

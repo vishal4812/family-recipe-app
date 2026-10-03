@@ -104,6 +104,7 @@ class FakeRecipeRepository implements RecipeRepository {
       prepTimeMinutes: draft.prepTimeMinutes,
       cookTimeMinutes: draft.cookTimeMinutes,
       servings: draft.servings,
+      collection: draft.collection,
       createdAt: now,
       updatedAt: now,
     );
@@ -153,6 +154,7 @@ class FakeRecipeRepository implements RecipeRepository {
       prepTimeMinutes: draft.prepTimeMinutes,
       cookTimeMinutes: draft.cookTimeMinutes,
       servings: draft.servings,
+      collection: draft.collection,
       updatedAt: DateTime(2026, 4, 7, 13),
     );
     _recipes[index] = updated;
@@ -172,6 +174,7 @@ AppDependencies buildTestDependencies({
   List<Recipe>? recipes,
   bool simulateInitialRecipeLoadError = false,
   RecipeImagePickerService? imagePickerService,
+  bool showOnboarding = false,
 }) {
   return AppDependencies.mock(
     splashDelay: Duration.zero,
@@ -183,6 +186,7 @@ AppDependencies buildTestDependencies({
         : null,
     initialRecipes: recipes ?? buildTestRecipes(),
     simulateInitialRecipeLoadError: simulateInitialRecipeLoadError,
+    showOnboarding: showOnboarding,
     recipeImagePickerService:
         imagePickerService ?? FakeRecipeImagePickerService(),
   );

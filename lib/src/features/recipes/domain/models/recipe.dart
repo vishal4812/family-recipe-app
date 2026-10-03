@@ -15,6 +15,7 @@ class Recipe {
     this.prepTimeMinutes,
     this.cookTimeMinutes,
     this.servings,
+    this.collection,
   });
 
   final String id;
@@ -27,6 +28,7 @@ class Recipe {
   final int? prepTimeMinutes;
   final int? cookTimeMinutes;
   final int? servings;
+  final String? collection;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -41,6 +43,7 @@ class Recipe {
     int? prepTimeMinutes,
     int? cookTimeMinutes,
     int? servings,
+    Object? collection = _sentinel,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -59,6 +62,9 @@ class Recipe {
       prepTimeMinutes: prepTimeMinutes ?? this.prepTimeMinutes,
       cookTimeMinutes: cookTimeMinutes ?? this.cookTimeMinutes,
       servings: servings ?? this.servings,
+      collection: identical(collection, _sentinel)
+          ? this.collection
+          : collection as String?,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

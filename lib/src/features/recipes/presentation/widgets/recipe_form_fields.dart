@@ -17,6 +17,7 @@ class RecipeFormFields extends StatelessWidget {
     required this.prepController,
     required this.cookController,
     required this.servingsController,
+    required this.collectionController,
     required this.titleValidator,
     required this.ingredientsValidator,
     required this.instructionsValidator,
@@ -34,6 +35,7 @@ class RecipeFormFields extends StatelessWidget {
   final TextEditingController prepController;
   final TextEditingController cookController;
   final TextEditingController servingsController;
+  final TextEditingController collectionController;
   final String? Function(String?) titleValidator;
   final String? Function(String?) ingredientsValidator;
   final String? Function(String?) instructionsValidator;
@@ -42,6 +44,19 @@ class RecipeFormFields extends StatelessWidget {
   final VoidCallback? onRemoveImage;
   final String? deleteActionLabel;
   final VoidCallback? onDeleteTap;
+
+  String? _validateOptionalPositiveWholeNumber(String? value) {
+    final input = (value ?? '').trim();
+    if (input.isEmpty) {
+      return null;
+    }
+
+    final parsed = int.tryParse(input);
+    if (parsed == null || parsed < 1) {
+      return 'Enter a whole number of 1 or more';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +85,13 @@ class RecipeFormFields extends StatelessWidget {
           minLines: 3,
           maxLines: 4,
         ),
+        const SizedBox(height: AppSpacing.md),
+        AppTextField(
+          label: 'Collection',
+          hintText: "Eg. Grandma's recipes",
+          controller: collectionController,
+          textInputAction: TextInputAction.next,
+        ),
         const SizedBox(height: AppSpacing.xl),
         AppMultilineField(
           label: 'Ingredients',
@@ -96,6 +118,7 @@ class RecipeFormFields extends StatelessWidget {
                 controller: prepController,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
+                validator: _validateOptionalPositiveWholeNumber,
               ),
             ),
             const SizedBox(width: AppSpacing.md),
@@ -106,6 +129,7 @@ class RecipeFormFields extends StatelessWidget {
                 controller: cookController,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
+                validator: _validateOptionalPositiveWholeNumber,
               ),
             ),
           ],
@@ -117,6 +141,7 @@ class RecipeFormFields extends StatelessWidget {
           controller: servingsController,
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.done,
+          validator: _validateOptionalPositiveWholeNumber,
         ),
         if (deleteActionLabel != null && onDeleteTap != null) ...<Widget>[
           const SizedBox(height: AppSpacing.xl),

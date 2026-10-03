@@ -31,6 +31,7 @@ model Recipe {
   servings     Int?
   difficulty   String?  @db.VarChar(60)
   cuisine      String?  @db.VarChar(80)
+  collection   String?  @db.VarChar(80)
   imageUrl     String?  @map("image_url") @db.VarChar(500)
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now()) @map("created_at")
@@ -39,5 +40,6 @@ model Recipe {
   @@index([userId])
   @@index([userId, updatedAt])
   @@index([userId, title])
+  @@index([userId, collection])
   @@map("recipes")
 }

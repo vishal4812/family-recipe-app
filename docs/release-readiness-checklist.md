@@ -8,8 +8,8 @@ Not ready for closed beta yet.
 
 The product flow is functionally complete, but release configuration still has blocking setup work outside normal feature code:
 
-- Android release signing credentials still need to be supplied to [android/app/build.gradle.kts](/home/addweb/Learning/Pro/family-recipe-app/android/app/build.gradle.kts).
-- iOS Apple signing, team, and provisioning still need to be supplied in [ios/Runner.xcodeproj/project.pbxproj](/home/addweb/Learning/Pro/family-recipe-app/ios/Runner.xcodeproj/project.pbxproj).
+- Android release signing credentials still need to be supplied to [android/app/build.gradle.kts](../android/app/build.gradle.kts).
+- iOS Apple signing, team, and provisioning still need to be supplied in [ios/Runner.xcodeproj/project.pbxproj](../ios/Runner.xcodeproj/project.pbxproj).
 - A real HTTPS staging or production backend URL still needs to be supplied at build time.
 - A full real-device smoke pass against the deployed HTTPS backend still needs to be completed.
 
@@ -95,12 +95,12 @@ Configured app identifiers in this repo:
 
 Code-path assumption to verify:
 
-- [api_recipe_image_upload_service.dart](/home/addweb/Learning/Pro/family-recipe-app/lib/src/features/recipes/data/services/api_recipe_image_upload_service.dart) now expects `/uploads/image` to return an absolute `http://` or `https://` URL.
-- [app_image.dart](/home/addweb/Learning/Pro/family-recipe-app/lib/src/shared/widgets/media/app_image.dart) renders remote recipe photos directly from `imageUrl`; if the backend returns an invalid, private, or expired URL, the UI will fall back to the image placeholder.
+- [api_recipe_image_upload_service.dart](../lib/src/features/recipes/data/services/api_recipe_image_upload_service.dart) now expects `/uploads/image` to return an absolute `http://` or `https://` URL.
+- [app_image.dart](../lib/src/shared/widgets/media/app_image.dart) renders remote recipe photos directly from `imageUrl`; if the backend returns an invalid, private, or expired URL, the UI will fall back to the image placeholder.
 
 ## Android Release Checklist
 
-1. Create `android/key.properties` from [android/key.properties.example](/home/addweb/Learning/Pro/family-recipe-app/android/key.properties.example) or set `ANDROID_KEYSTORE_PATH`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
+1. Create `android/key.properties` from [android/key.properties.example](../android/key.properties.example) or set `ANDROID_KEYSTORE_PATH`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 2. Build a release `.aab` with the production HTTPS `API_BASE_URL`.
 3. Install and test the release build on at least one physical Android device.
 4. Verify login, session restore, recipe CRUD, search, upload, and logout on the release build.

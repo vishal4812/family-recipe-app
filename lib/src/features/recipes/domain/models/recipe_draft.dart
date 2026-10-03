@@ -10,6 +10,7 @@ class RecipeDraft {
     this.prepTimeMinutes,
     this.cookTimeMinutes,
     this.servings,
+    this.collection,
   });
 
   final String title;
@@ -20,4 +21,5 @@ class RecipeDraft {
   final int? prepTimeMinutes;
   final int? cookTimeMinutes;
   final int? servings;
+  final String? collection;
 }

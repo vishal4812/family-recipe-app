@@ -10,6 +10,7 @@ class RecipeUpsertDto {
     this.prepTime,
     this.cookTime,
     this.servings,
+    this.collection,
   });
 
   final String title;
@@ -20,9 +21,11 @@ class RecipeUpsertDto {
   final int? prepTime;
   final int? cookTime;
   final int? servings;
+  final String? collection;
 
   factory RecipeUpsertDto.fromDraft(RecipeDraft draft) {
     final description = draft.description.trim();
+    final collection = draft.collection?.trim() ?? '';
     return RecipeUpsertDto(
       title: draft.title.trim(),
       description: description.isEmpty ? null : description,
@@ -32,6 +35,7 @@ class RecipeUpsertDto {
       prepTime: draft.prepTimeMinutes,
       cookTime: draft.cookTimeMinutes,
       servings: draft.servings,
+      collection: collection.isEmpty ? null : collection,
     );
   }
 
@@ -45,6 +49,7 @@ class RecipeUpsertDto {
       'prepTime': prepTime,
       'cookTime': cookTime,
       'servings': servings,
+      'collection': collection,
     };
   }
 }

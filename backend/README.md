@@ -76,7 +76,7 @@ STORAGE_ROOT="storage"
 
 ## Database
 
-Prisma schema: [prisma/schema.prisma](/home/addweb/Learning/Pro/family-recipe-app/backend/prisma/schema.prisma)
+Prisma schema: [prisma/schema.prisma](prisma/schema.prisma)
 
 Models:
 
@@ -85,7 +85,7 @@ Models:
 
 Included migration:
 
-- [prisma/migrations/20260407195000_init/migration.sql](/home/addweb/Learning/Pro/family-recipe-app/backend/prisma/migrations/20260407195000_init/migration.sql)
+- [prisma/migrations/20260407195000_init/migration.sql](prisma/migrations/20260407195000_init/migration.sql)
 
 ## Scripts
 
@@ -172,7 +172,7 @@ All handled errors return the same JSON shape:
 
 ## Seed Data
 
-Seed script: [prisma/seed.ts](/home/addweb/Learning/Pro/family-recipe-app/backend/prisma/seed.ts)
+Seed script: [prisma/seed.ts](prisma/seed.ts)
 
 Demo account:
 

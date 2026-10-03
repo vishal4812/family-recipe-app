@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'core/config/app_config.dart';
 import 'core/di/app_dependencies.dart';
@@ -47,6 +48,17 @@ class _FamilyRecipeAppState extends State<FamilyRecipeApp> {
       child: AppStateScope(
         notifier: _appState,
         child: MaterialApp(
+          builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+            value: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              systemNavigationBarColor: Color(0xFFFFF9F6),
+              systemNavigationBarIconBrightness: Brightness.dark,
+              systemNavigationBarDividerColor: Color(0xFFFFF9F6),
+              systemNavigationBarContrastEnforced: false,
+            ),
+            child: child ?? const SizedBox.shrink(),
+          ),
           title: 'Family Recipe App',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.light(),

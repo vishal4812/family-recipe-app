@@ -26,7 +26,7 @@ class MetadataChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor ?? AppColors.surfaceSoft,
         borderRadius: AppRadii.radius28,
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

@@ -30,6 +30,7 @@ class HomeRecipeListScreen extends StatefulWidget {
 class _HomeRecipeListScreenState extends State<HomeRecipeListScreen> {
   final TextEditingController _searchController = TextEditingController();
   Timer? _searchDebounce;
+  String? _selectedCollection;
 
   @override
   void dispose() {
@@ -39,6 +40,10 @@ class _HomeRecipeListScreenState extends State<HomeRecipeListScreen> {
   }
 
   String get _query => _searchController.text.trim().toLowerCase();
+
+  String _countLabel(int count, String singular, String plural) {
+    return '$count ${count == 1 ? singular : plural}';
+  }
 
   Future<void> _openAddRecipe() async {
     final result = await Navigator.of(context).pushNamed(RouteNames.addRecipe);
@@ -94,7 +99,8 @@ class _HomeRecipeListScreenState extends State<HomeRecipeListScreen> {
           ),
         ],
       ),
-      floatingActionButton: appState.recipeLoadStatus == RecipeLoadStatus.loaded
+      floatingActionButton:
+          appState.recipeLoadStatus == RecipeLoadStatus.loaded && _query.isEmpty
           ? AddRecipeFab(onPressed: _openAddRecipe)
           : null,
       body: SafeArea(
@@ -122,11 +128,26 @@ class _HomeRecipeListScreenState extends State<HomeRecipeListScreen> {
   Widget _buildLoadedState(AppState appState) {
     final recipes = appState.recipes;
     final hasQuery = _query.isNotEmpty;
-    final filteredRecipes = hasQuery
-        ? recipes
-              .where((recipe) => recipe.title.toLowerCase().contains(_query))
-              .toList()
-        : recipes;
+    final collections =
+        recipes
+            .map((recipe) => recipe.collection?.trim() ?? '')
+            .where((collection) => collection.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
+    final hasCollectionFilter = (_selectedCollection ?? '').isNotEmpty;
+    final filteredRecipes = recipes.where((recipe) {
+      final matchesCollection =
+          !hasCollectionFilter || recipe.collection == _selectedCollection;
+      final matchesQuery =
+          !hasQuery || recipe.title.toLowerCase().contains(_query);
+      return matchesCollection && matchesQuery;
+    }).toList();
+    final resultsLabel = hasQuery
+        ? '${_countLabel(filteredRecipes.length, 'result', 'results')} for "${_searchController.text.trim()}"'
+        : hasCollectionFilter
+        ? '${_countLabel(filteredRecipes.length, 'recipe', 'recipes')} in ${_selectedCollection!}'
+        : '';
 
     return Align(
       alignment: Alignment.topCenter,
@@ -138,9 +159,10 @@ class _HomeRecipeListScreenState extends State<HomeRecipeListScreen> {
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 88),
           children: <Widget>[
             const HomeHeaderBlock(
-              eyebrow: 'Your kitchen notebook',
-              title: 'Saved recipes',
-              subtitle: 'Keep family favorites in one place',
+              eyebrow: 'Your family cookbook',
+              title: 'Recipes worth keeping',
+              subtitle:
+                  'Keep every family favourite, story, and tradition close.',
             ),
             const SizedBox(height: AppSpacing.md),
             RecipeSearchField(
@@ -154,35 +176,66 @@ class _HomeRecipeListScreenState extends State<HomeRecipeListScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              hasQuery
-                  ? '${filteredRecipes.length} results for "${_searchController.text.trim()}"'
-                  : '${recipes.length} recipes',
+              hasQuery || hasCollectionFilter
+                  ? resultsLabel
+                  : '${_countLabel(recipes.length, 'recipe', 'recipes')} in your cookbook',
               style: AppTypography.caption,
             ),
+            if (collections.isNotEmpty) ...<Widget>[
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                'Browse family chapters',
+                style: AppTypography.bodyLarge.copyWith(fontSize: 15),
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              SizedBox(
+                height: 40,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: collections.length + 1,
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(width: AppSpacing.xs),
+                  itemBuilder: (context, index) {
+                    final collection = index == 0
+                        ? null
+                        : collections[index - 1];
+                    return ChoiceChip(
+                      label: Text(collection ?? 'All collections'),
+                      selected: _selectedCollection == collection,
+                      onSelected: (_) {
+                        setState(() => _selectedCollection = collection);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
             const SizedBox(height: AppSpacing.lg),
-            if (recipes.isEmpty)
-              RecipeEmptyState(onAddRecipe: _openAddRecipe)
-            else if (hasQuery && filteredRecipes.isEmpty)
+            if ((hasQuery || hasCollectionFilter) && filteredRecipes.isEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: AppSpacing.xxl),
                 child: StatusView(
                   icon: Icons.restaurant_menu_rounded,
-                  title: 'No recipes found',
-                  message:
-                      'Try a different title or add this recipe as a new one.',
+                  title: hasQuery ? 'No recipes found' : 'No recipes here yet',
+                  message: hasQuery
+                      ? 'Try a different title or add this recipe as a new one.'
+                      : 'Add a recipe to ${_selectedCollection!} or choose another collection.',
                   primaryAction: AppPrimaryButton(
                     label: 'Add Recipe',
                     onPressed: _openAddRecipe,
                   ),
                   secondaryAction: AppTextButton(
-                    label: 'Clear Search',
+                    label: 'Clear filters',
                     onPressed: () {
                       _searchController.clear();
-                      setState(() {});
+                      setState(() => _selectedCollection = null);
+                      AppStateScope.read(context).searchRecipes('');
                     },
                   ),
                 ),
               )
+            else if (recipes.isEmpty)
+              RecipeEmptyState(onAddRecipe: _openAddRecipe)
             else
               ...filteredRecipes.map(
                 (recipe) => Padding(
@@ -193,6 +246,7 @@ class _HomeRecipeListScreenState extends State<HomeRecipeListScreen> {
                     prepMinutes: recipe.prepTimeMinutes,
                     cookMinutes: recipe.cookTimeMinutes,
                     servings: recipe.servings,
+                    collection: recipe.collection,
                     imageUrl: recipe.imageUrl,
                     imagePath: recipe.imagePath,
                     onTap: () => _openRecipeDetail(recipe.id),

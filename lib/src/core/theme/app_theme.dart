@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
@@ -16,7 +15,6 @@ class AppTheme {
         onPrimary: AppColors.onPrimary,
         onSurface: AppColors.textPrimary,
       ),
-      textTheme: GoogleFonts.nunitoSansTextTheme(),
     );
 
     return base.copyWith(
@@ -29,9 +27,25 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: AppColors.background,
       dividerColor: AppColors.border,
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.surface,
+        selectedColor: AppColors.cookbookSage,
+        secondarySelectedColor: AppColors.cookbookSage,
+        side: const BorderSide(color: AppColors.border),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        labelStyle: const TextStyle(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w600,
+        ),
+        secondaryLabelStyle: const TextStyle(
+          color: AppColors.cookbookSageDark,
+          fontWeight: FontWeight.w700,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.textPrimary,
-        contentTextStyle: GoogleFonts.nunitoSans(
+        contentTextStyle: const TextStyle(
           color: AppColors.onPrimary,
           fontSize: 14,
           fontWeight: FontWeight.w600,

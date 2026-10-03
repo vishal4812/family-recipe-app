@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -58,6 +61,46 @@ void main() {
               ),
         ),
       );
+    });
+
+    test('sends selected PNG files with an image MIME type', () async {
+      final temporaryDirectory = await Directory.systemTemp.createTemp(
+        'family-recipe-multipart-',
+      );
+      addTearDown(() => temporaryDirectory.delete(recursive: true));
+      final imageFile = File('${temporaryDirectory.path}/recipe.png');
+      await imageFile.writeAsBytes(<int>[137, 80, 78, 71]);
+
+      final client = NestApiClient(
+        baseUrl: 'http://localhost:3000',
+        authTokenStore: MemoryAuthTokenStore(initialToken: 'jwt-token'),
+        httpClient: MockClient((request) async {
+          final requestBody = latin1.decode(request.bodyBytes);
+          expect(request.method, 'POST');
+          expect(request.url.path, '/uploads/image');
+          expect(request.headers['authorization'], 'Bearer jwt-token');
+          expect(
+            request.headers['content-type'],
+            startsWith('multipart/form-data; boundary='),
+          );
+          expect(requestBody, contains('content-type: image/png'));
+          expect(requestBody, contains('name="file"'));
+          return http.Response(
+            '{"url":"http://localhost:3000/upload.png"}',
+            201,
+          );
+        }),
+      );
+
+      final response = await client.postMultipart(
+        '/uploads/image',
+        fileField: 'file',
+        filePath: imageFile.path,
+      );
+
+      expect(response, <String, dynamic>{
+        'url': 'http://localhost:3000/upload.png',
+      });
     });
   });
 }

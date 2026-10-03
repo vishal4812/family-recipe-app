@@ -218,6 +218,7 @@ void main() {
           'prepTime': 10,
           'cookTime': 25,
           'servings': 3,
+          'collection': null,
         });
         expect(
           createdRecipe.imageUrl,
@@ -249,6 +250,7 @@ void main() {
           'prepTime': 12,
           'cookTime': 25,
           'servings': 4,
+          'collection': null,
         });
         expect(updatedRecipe.title, 'Dal Tadka Updated');
         expect(updatedRecipe.description, '');

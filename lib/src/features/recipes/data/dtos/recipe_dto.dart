@@ -15,6 +15,7 @@ class RecipeDto {
     this.prepTimeMinutes,
     this.cookTimeMinutes,
     this.servings,
+    this.collection,
   });
 
   final String id;
@@ -28,6 +29,7 @@ class RecipeDto {
   final int? prepTimeMinutes;
   final int? cookTimeMinutes;
   final int? servings;
+  final String? collection;
   final String createdAt;
   final String updatedAt;
 
@@ -44,6 +46,7 @@ class RecipeDto {
       prepTimeMinutes: recipe.prepTimeMinutes,
       cookTimeMinutes: recipe.cookTimeMinutes,
       servings: recipe.servings,
+      collection: recipe.collection,
       createdAt: recipe.createdAt.toIso8601String(),
       updatedAt: recipe.updatedAt.toIso8601String(),
     );
@@ -62,6 +65,7 @@ class RecipeDto {
       prepTimeMinutes: (json['prepTime'] as num?)?.toInt(),
       cookTimeMinutes: (json['cookTime'] as num?)?.toInt(),
       servings: (json['servings'] as num?)?.toInt(),
+      collection: json['collection'] as String?,
       createdAt:
           (json['createdAt'] as String?) ?? DateTime.now().toIso8601String(),
       updatedAt:
@@ -81,6 +85,7 @@ class RecipeDto {
       prepTimeMinutes: prepTimeMinutes,
       cookTimeMinutes: cookTimeMinutes,
       servings: servings,
+      collection: collection,
       createdAt: DateTime.parse(createdAt),
       updatedAt: DateTime.parse(updatedAt),
     );
@@ -99,6 +104,7 @@ class RecipeDto {
       'prepTime': prepTimeMinutes,
       'cookTime': cookTimeMinutes,
       'servings': servings,
+      'collection': collection,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };

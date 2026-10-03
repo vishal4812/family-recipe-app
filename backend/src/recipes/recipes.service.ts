@@ -26,6 +26,7 @@ export class RecipesService {
         servings: dto.servings ?? null,
         difficulty: dto.difficulty ?? null,
         cuisine: dto.cuisine ?? null,
+        collection: dto.collection ?? null,
         imageUrl: dto.imageUrl ?? null,
       },
     });
@@ -98,6 +99,9 @@ export class RecipesService {
           ? { difficulty: dto.difficulty ?? null }
           : {}),
         ...(dto.cuisine !== undefined ? { cuisine: dto.cuisine ?? null } : {}),
+        ...(dto.collection !== undefined
+          ? { collection: dto.collection ?? null }
+          : {}),
         ...(dto.imageUrl !== undefined
           ? { imageUrl: dto.imageUrl ?? null }
           : {}),

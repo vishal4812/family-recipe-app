@@ -5,14 +5,11 @@ import '../../../../core/network/error_message_resolver.dart';
 import '../../../../core/state/app_state_scope.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_dimensions.dart';
+import '../../../../core/theme/app_radii.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/branding/brand_mark.dart';
-import '../../../../shared/widgets/buttons/app_primary_button.dart';
-import '../../../../shared/widgets/buttons/app_text_button.dart';
 import '../../../../shared/widgets/inputs/app_text_field.dart';
-import '../widgets/auth_mode_toggle.dart';
-import '../widgets/form_surface_card.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -22,7 +19,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController(
     text: 'demo@familyrecipe.app',
@@ -67,6 +64,13 @@ class _AuthScreenState extends State<AuthScreen> {
     }
     if (!input.contains('@')) {
       return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validateFullName(String? value) {
+    if ((value ?? '').trim().isEmpty) {
+      return 'Please enter your name';
     }
     return null;
   }
@@ -135,6 +139,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void _setMode(bool isSignup) {
     setState(() {
       _isSignup = isSignup;
+      _formKey = GlobalKey<FormState>();
       _authError = null;
       _didReadPendingAuthMessage = true;
     });
@@ -143,93 +148,152 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.authBackdrop,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 40, 20, 24),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const BrandMark(size: AppDimensions.authLogoBox),
-                    const SizedBox(height: AppSpacing.xl),
-                    Text(
-                      'Keep your family recipes close',
-                      style: AppTypography.displayLarge,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      'Save the dishes you grew up with, one recipe at a time.',
-                      style: AppTypography.bodySmall,
-                    ),
-                    const SizedBox(height: AppSpacing.xxl),
-                    AuthModeToggle(isSignup: _isSignup, onChanged: _setMode),
-                    const SizedBox(height: AppSpacing.md),
-                    FormSurfaceCard(
-                      child: Column(
-                        children: <Widget>[
-                          if (_isSignup) ...<Widget>[
-                            AppTextField(
-                              label: 'Full name',
-                              controller: _nameController,
-                              textInputAction: TextInputAction.next,
-                            ),
-                            const SizedBox(height: AppSpacing.md),
-                          ],
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 360),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: AppRadii.radius20,
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(28, 32, 28, 24),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        const Center(
+                          child: BrandMark(size: AppDimensions.authLogoBox),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        Text(
+                          _isSignup ? 'Create your cookbook' : 'Welcome back',
+                          style: AppTypography.titleMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          _isSignup
+                              ? 'Start saving the recipes your family loves.'
+                              : 'Sign in to your family cookbook.',
+                          style: AppTypography.caption,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                        const _AuthDivider(),
+                        const SizedBox(height: AppSpacing.lg),
+                        if (_isSignup) ...<Widget>[
                           AppTextField(
-                            label: 'Email',
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
+                            label: 'Full name',
+                            controller: _nameController,
+                            hintText: 'Your name',
                             textInputAction: TextInputAction.next,
-                            validator: _validateEmail,
+                            validator: _validateFullName,
                           ),
                           const SizedBox(height: AppSpacing.md),
-                          AppTextField(
-                            label: 'Password',
-                            controller: _passwordController,
-                            obscureText: true,
-                            textInputAction: TextInputAction.done,
-                            validator: _validatePassword,
+                        ],
+                        AppTextField(
+                          label: 'Email',
+                          controller: _emailController,
+                          hintText: 'Enter your email',
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          validator: _validateEmail,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        AppTextField(
+                          label: 'Password',
+                          controller: _passwordController,
+                          hintText: 'Enter your password',
+                          obscureText: true,
+                          textInputAction: TextInputAction.done,
+                          validator: _validatePassword,
+                          suffixIcon: const Icon(Icons.visibility_off_outlined),
+                        ),
+                        if (_authError != null) ...<Widget>[
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            _authError!,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.error,
+                            ),
                           ),
                         ],
-                      ),
-                    ),
-                    if (_authError != null) ...<Widget>[
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        _authError!,
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.error,
+                        const SizedBox(height: AppSpacing.lg),
+                        SizedBox(
+                          height: 48,
+                          child: FilledButton(
+                            onPressed: _isSubmitting ? null : _submit,
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.authAction,
+                              disabledBackgroundColor: AppColors.disabled,
+                              foregroundColor: AppColors.authBackdrop,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: AppRadii.radius28,
+                              ),
+                              textStyle: AppTypography.buttonSmall,
+                            ),
+                            child: _isSubmitting
+                                ? const SizedBox(
+                                    height: 18,
+                                    width: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppColors.authBackdrop,
+                                    ),
+                                  )
+                                : Text(_isSignup ? 'Sign up' : 'Log in'),
+                          ),
                         ),
-                      ),
-                    ],
-                    const SizedBox(height: AppSpacing.lg),
-                    AppPrimaryButton(
-                      label: 'Continue',
-                      isLoading: _isSubmitting,
-                      onPressed: _submit,
+                        const SizedBox(height: AppSpacing.md),
+                        TextButton(
+                          onPressed: () => _setMode(!_isSignup),
+                          style: TextButton.styleFrom(
+                            foregroundColor: AppColors.authActionDark,
+                            textStyle: AppTypography.caption.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          child: Text(
+                            _isSignup
+                                ? 'Already have an account? Log in'
+                                : 'New here? Create an account',
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Center(
-                      child: AppTextButton(
-                        label: _isSignup
-                            ? 'Already have an account? Log in'
-                            : 'New here? Create an account',
-                        onPressed: () => _setMode(!_isSignup),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AuthDivider extends StatelessWidget {
+  const _AuthDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        const Expanded(child: Divider()),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          child: Text('YOUR FAMILY RECIPES', style: AppTypography.caption),
+        ),
+        const Expanded(child: Divider()),
+      ],
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_radii.dart';
 
 class BrandMark extends StatelessWidget {
   const BrandMark({super.key, this.size = 72});
@@ -14,14 +13,13 @@ class BrandMark extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors.accentSoft,
-        borderRadius: AppRadii.radius20,
-        border: Border.all(color: AppColors.border),
+        color: AppColors.primary,
+        shape: BoxShape.circle,
       ),
       child: Icon(
         Icons.menu_book_rounded,
         size: size * 0.48,
-        color: AppColors.primaryDark,
+        color: AppColors.onPrimary,
       ),
     );
   }

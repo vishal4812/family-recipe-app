@@ -103,6 +103,12 @@ export class UpdateRecipeDto {
   @Transform(({ value }) => normalizeNullableString(value))
   @IsOptional()
   @IsString()
+  @MaxLength(80)
+  collection?: string | null;
+
+  @Transform(({ value }) => normalizeNullableString(value))
+  @IsOptional()
+  @IsString()
   @MaxLength(500)
   imageUrl?: string | null;
 }
